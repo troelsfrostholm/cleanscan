@@ -11,8 +11,8 @@
 import sys
 import pathlib
 import shutil
-import image
-import cleaner
+import src.image as image
+import src.cleaner as cleaner
 
 supportedFileTypes = ".png .jpg"
 
