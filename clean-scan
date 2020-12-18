@@ -1,0 +1,63 @@
+#!/usr/local/bin/python3
+#
+#
+# clean-scan is a program that cleans up photos of documents and
+# scanned documents.
+#
+# This can for instance be used to make it easier for optical character
+# recognition programs to read the document.
+#
+
+import sys
+import pathlib
+import shutil
+
+supportedFileTypes = ".png .jpg"
+
+usageText = f"""
+Usage: clean-scan image-in image-out
+
+image-in:  File name of input image
+image-out: File name of output image
+
+`clean-scan` is a program that cleans up photos of documents and
+scanned documents. 
+
+This can for instance be used to make it easier for optical character
+recognition programs to read the document. 
+
+Supported file types: {supportedFileTypes}
+"""
+
+
+def bailout(message):
+    print(f"Error: {message}")
+    exit(1)
+
+
+if len(sys.argv) != 3:
+    bailout(usageText)
+
+pathIn = pathlib.Path(sys.argv[1])
+pathOut = pathlib.Path(sys.argv[2])
+
+if not pathIn.suffix in supportedFileTypes:
+    bailout(
+        f"{pathIn.suffix} not supported. Image has to be one of {supportedFileTypes}"
+    )
+
+if not pathOut.suffix in supportedFileTypes:
+    bailout(
+        f"{pathOut.suffix} not supported. Image has to be one of {supportedFileTypes}"
+    )
+
+if not pathIn.exists():
+    bailout(f"Input file {pathIn} not found")
+
+if pathIn.is_dir():
+    bailout(f"Input file {pathIn} is a directory")
+
+if not pathIn.is_file():
+    bailout(f"Input file {pathIn} is not a regular file")
+
+shutil.copyfile(pathIn, pathOut)
