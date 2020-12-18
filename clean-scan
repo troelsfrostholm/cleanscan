@@ -11,6 +11,8 @@
 import sys
 import pathlib
 import shutil
+import image
+import cleaner
 
 supportedFileTypes = ".png .jpg"
 
@@ -60,4 +62,6 @@ if pathIn.is_dir():
 if not pathIn.is_file():
     bailout(f"Input file {pathIn} is not a regular file")
 
-shutil.copyfile(pathIn, pathOut)
+imgIn = image.load(pathIn)
+imgOut = cleaner.clean(imgIn)
+imgOut.save(pathOut)
