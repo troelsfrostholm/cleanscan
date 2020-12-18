@@ -10,4 +10,5 @@ setup(
     license="GNU GPLv3",
     packages=["cleanscan"],
     zip_safe=False,
+    scripts=["bin/cleanscan"],
 )
