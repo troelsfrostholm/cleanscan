@@ -2,6 +2,8 @@
 
 import cv2
 import imutils
+import numpy as np
+from cleanscan.transform import four_point_transform
 
 """ Class for wrapping cv2 images """
 
@@ -63,13 +65,47 @@ class Image:
 
         return (approxContour, contour)
 
+    def drawContour(self, contour):
+        """ Draws contour on top of image """
+        withContours = self.data.copy()
+        cv2.drawContours(withContours, [contour], -1, (0, 255, 0), 2)
+        return Image(withContours)
+
+    def warp(self, contour):
+        """ Warp content of square contour so it fills the entire image """
+
+        warped = four_point_transform(self.data, contour.reshape(4, 2))
+        return Image(warped)
+
+    def crop(self, marginLeft, marginTop, marginRight, marginBottom):
+        """ Crop image removing given margins in pixels """
+
+        ny, nx = self.data.shape
+
+        left = marginLeft
+        right = nx - marginRight
+        top = marginTop
+        bottom = ny - marginBottom
+
+        contour = np.array(
+            [
+                [[left, top]],
+                [[left, bottom]],
+                [[right, bottom]],
+                [[right, top]],
+            ]
+        )
+
+        return self.warp(contour)
+
     def clean(self):
         """ Clean the image """
 
-        edges = self.gray().edges()
+        gray = self.gray()
+        edges = gray.edges()
         (approxContour, contour) = edges.contours()
 
-        return edges
+        return gray.warp(approxContour).crop(20, 20, 20, 20)
 
 
 def load(path):
