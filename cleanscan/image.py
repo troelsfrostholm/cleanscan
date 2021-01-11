@@ -19,15 +19,22 @@ class Image:
         """ Saves image to path """
         cv2.imwrite(str(path), self.data)
 
-    def clean(self):
-        gray = cv2.cvtColor(self.data, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (5, 5), 0)
-        edged = cv2.Canny(gray, 75, 200)
+    def gray(self):
+        """ Convert to gray scale """
+        grayscale = cv2.cvtColor(self.data, cv2.COLOR_BGR2GRAY)
+        return Image(grayscale)
+
+    def edges(self):
+        """ Edge detetion """
+        edged = cv2.Canny(self.data, 75, 200)
 
         # Dilate edged image to close contours
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
         dilated = cv2.dilate(edged, kernel)
         return Image(dilated)
+
+    def clean(self):
+        return self.gray().edges()
 
 
 def load(path):

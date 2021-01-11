@@ -12,7 +12,6 @@ import sys
 import pathlib
 import shutil
 import cleanscan.image as image
-import cleanscan.cleaner as cleaner
 
 supportedFileTypes = ".png .jpg"
 
