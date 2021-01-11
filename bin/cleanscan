@@ -63,5 +63,5 @@ if not pathIn.is_file():
     bailout(f"Input file {pathIn} is not a regular file")
 
 imgIn = image.load(pathIn)
-imgOut = cleaner.clean(imgIn)
+imgOut = imgIn.clean()
 imgOut.save(pathOut)
