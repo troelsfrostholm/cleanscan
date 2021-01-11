@@ -3,6 +3,7 @@
 import cv2
 import imutils
 import numpy as np
+import skimage.filters as filters
 from cleanscan.transform import four_point_transform
 
 """ Class for wrapping cv2 images """
@@ -98,6 +99,18 @@ class Image:
 
         return self.warp(contour)
 
+    def monocrome(self):
+        """ Convert image to monocrome """
+
+        data = self.data.copy()
+
+        T = filters.threshold_local(data, 201, offset=10, method="gaussian", param=4)
+        T2 = filters.threshold_mean(data)
+        T_comb = np.minimum(T, T2)
+        data = (data > T_comb).astype("uint8") * 255
+
+        return Image(data)
+
     def clean(self):
         """ Clean the image """
 
@@ -105,7 +118,11 @@ class Image:
         edges = gray.edges()
         (approxContour, contour) = edges.contours()
 
-        return gray.warp(approxContour).crop(20, 20, 20, 20)
+        warped = gray.warp(approxContour)
+        cropped = warped.crop(30, 30, 30, 30)
+        monocrome = cropped.monocrome()
+
+        return monocrome
 
 
 def load(path):
