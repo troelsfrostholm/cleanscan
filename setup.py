@@ -9,7 +9,7 @@ setup(
     author_email="troelsfrostholm@gmail.com",
     license="GNU GPLv3",
     packages=["cleanscan"],
-    install_requires=["cv2", "imutils", "numpy", "scikit-image"],
+    install_requires=["opencv-python", "imutils", "numpy", "scikit-image"],
     zip_safe=False,
     scripts=["bin/cleanscan"],
 )
